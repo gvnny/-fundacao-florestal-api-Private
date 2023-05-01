@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.kakori.models.UsuarioModel;
 import com.kakori.services.UsuarioService;
@@ -38,14 +39,16 @@ public class UsuarioController {
             return new ResponseEntity<UsuarioModel>(HttpStatus.NOT_FOUND);
         }
     }
-    @PostMapping("/")
+
+    @PostMapping("")
     public void add(@RequestBody UsuarioModel usuario) {
     	usuarioService.saveUser(usuario);
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody UsuarioModel usuario, @PathVariable Integer id) {
         try {
-            UsuarioModel existUsuario = usuarioService.getUsuario(id);
+            usuarioService.getUsuario(id);
             usuario.setID_USUARIO(id);            
             usuarioService.saveUser(usuario);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -53,9 +56,14 @@ public class UsuarioController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Integer id) {
-
-    	usuarioService.deleteUsuario(id);
+        try {
+            usuarioService.getUsuario(id);
+            usuarioService.deleteUsuario(id);
+        } catch (NoSuchElementException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }                                   
     }
 }

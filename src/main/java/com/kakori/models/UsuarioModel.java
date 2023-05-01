@@ -6,9 +6,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "TB_USUARIO")
+@Table(name = "TB_USUARIO",
+	   uniqueConstraints = @UniqueConstraint(columnNames = "LOGIN"))
 public class UsuarioModel {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +39,7 @@ public class UsuarioModel {
         this.ADMINISTRADOR = ADMINISTRADOR;
     }
     
-    /**
+    /**""
 	 * @return the ID_USUARIO
 	 */
 	public int getID_USUARIO() {
